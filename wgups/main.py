@@ -1,8 +1,6 @@
 #Salvador Amaya; 010348952
 import csv
 from datetime import timedelta
-
-# Import custom classes
 from HashTable import HashTable
 from Package import Package
 from Truck import Truck
@@ -126,9 +124,10 @@ class Main:
 
     def view_package_details(self):
         try:
-            time_input = input("At what time do you want to view the delivery status? (HH:MM) ")
-            hr, min = time_input.split(":")
-            convert_time = timedelta(hours=int(hr), minutes=int(min))
+            time_input = input("At what time do you want to view the delivery status? (HH:MM or EOD) ")
+            convert_time = self.time_input_to_timedelta(time_input)
+            if convert_time is None:
+                return
 
             # Update package address if it's 10:20 AM
             if convert_time == timedelta(hours=10, minutes=20):
@@ -184,6 +183,20 @@ class Main:
         print(message)
         exit()
 
-# Start the program
+    def time_input_to_timedelta(self, time_input):
+        """
+        Converts the user time input into a timedelta object.
+        """
+        try:
+            if time_input.lower() == "eod":
+                return timedelta(hours=17)
+            else:
+                hr, min = map(int, time_input.split(":"))
+                return timedelta(hours=hr, minutes=min)
+        except ValueError:
+            print("Invalid time format; please use HH:MM or 'EOD'.")
+            return None
+
+# Run the program
 if __name__ == "__main__":
     Main()
