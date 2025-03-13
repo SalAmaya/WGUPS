@@ -13,8 +13,8 @@ with open("data/distance-matrix.csv") as dist, open("data/address-table.csv") as
 # Read and create Package objects, then load them into the hash table
 with open("data/package-file.csv") as pkg:
     pkg_hash = HashTable()
-    for package in (Package(int(row[0]), row[1], row[2], row[3], row[4], row[5], row[6], "at the hub")
-                    for row in csv.reader(pkg)):
+    for row in csv.reader(pkg):
+        package = Package(int(row[0]), row[1], row[2], row[3], row[4], row[5], row[6], "at the hub", row[7])
         pkg_hash.insert(package.package_id, package)
 
 # Function to get distance between two addresses
@@ -47,9 +47,9 @@ def nearest_neighbor(truck):
     Orders packages on a given truck using the nearest neighbor algorithm.
     Also calculates the distance the truck drives once the packages are sorted.
     """
-    not_delivered = [pkg_hash.lookup(pkg_id) for pkg_id in truck.packages] # Collect packages to deliver
+    not_delivered = [pkg_hash.lookup(pkg_id) for pkg_id in truck.packages]  # Collect packages to deliver
 
-    truck.packages.clear() # Clear the truck's package list
+    truck.packages.clear()  # Clear the truck's package list
 
     while not_delivered:
         next_package = None
